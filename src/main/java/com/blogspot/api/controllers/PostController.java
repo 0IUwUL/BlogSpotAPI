@@ -1,7 +1,6 @@
 package com.blogspot.api.controllers;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -34,11 +33,11 @@ public class PostController {
 
     //get all post
     @GetMapping("posts")
-    public ResponseEntity<List<Post>> getPosts(){
-        List<Post> posts = new ArrayList<>();
-        posts.add(new Post(1, "Test", "test", LocalDateTime.now(), LocalDateTime.now()));
-
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<List<PostDTO>> getPosts(){
+        // List<PostDTO> posts = postService.getAllPost();
+        // return ResponseEntity.ok(posts);
+        //one liner
+        return new ResponseEntity<>(postService.getAllPost(), HttpStatus.OK);
     }
 
     //get specific post

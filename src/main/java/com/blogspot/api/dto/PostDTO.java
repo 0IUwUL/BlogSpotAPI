@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 
 public class PostDTO {
     private int id;
