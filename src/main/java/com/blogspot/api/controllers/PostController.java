@@ -1,6 +1,5 @@
 package com.blogspot.api.controllers;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blogspot.api.dto.PostDTO;
-import com.blogspot.api.models.Post;
 import com.blogspot.api.services.PostService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,23 +40,21 @@ public class PostController {
 
     //get specific post
     @GetMapping("{id}")
-    public Post getPost(@PathVariable int id){
-        return new Post(id, "This is a test", "Testing the test", LocalDateTime.now(), LocalDateTime.now());
+    public ResponseEntity<PostDTO> getPost(@PathVariable int id){
+        // PostDTO postDTO = postService.getPost(id);
+        return ResponseEntity.ok(postService.getPost(id));
     }
 
     @PostMapping(value="create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
-
         return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<Post> updatePost(@RequestBody Post post, @PathVariable("id") int id){
-        System.out.println(post.getTitle());
-        System.out.println(post.getContent());
-        return ResponseEntity.ok(post);
-
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, @PathVariable("id") int id){
+        PostDTO response = postService.updatePost(id, postDTO);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("delete/{id}")
