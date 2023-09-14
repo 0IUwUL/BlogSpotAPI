@@ -4,9 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.blogspot.api.dto.PostDTO;
+import com.blogspot.api.dto.PostResponse;
 import com.blogspot.api.exceptions.PostException;
 import com.blogspot.api.models.Post;
 import com.blogspot.api.repositories.PostRepository;
@@ -34,9 +38,21 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public List<PostDTO> getAllPost() {
-        List<Post> posts = postRepo.findAllByOrderByUpdatedOn();
-        return posts.stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList());
+    public PostResponse getAllPost(int pageNo, int pageSize) {
+        Pageable pagable = PageRequest.of(pageNo, pageSize);
+        Page<Post> posts = postRepo.findAllByOrderByUpdatedOnDesc(pagable);
+        List<Post> listofPosts = posts.getContent();
+        List<PostDTO> content = listofPosts.stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNo(posts.getNumber());
+        postResponse.setPageSize(posts.getSize());
+        postResponse.setTotalElements(posts.getTotalElements());
+        postResponse.setTotalPages(posts.getTotalPages());
+        postResponse.setLast(posts.isLast());
+        
+        return postResponse;
     }
 
 

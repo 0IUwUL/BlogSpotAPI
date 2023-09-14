@@ -1,12 +1,11 @@
 package com.blogspot.api.services;
 
-import java.util.List;
-
 import com.blogspot.api.dto.PostDTO;
+import com.blogspot.api.dto.PostResponse;
 
 public interface PostService {
     PostDTO createPost(PostDTO postDTO);
-    List<PostDTO> getAllPost();
+    PostResponse getAllPost(int pageNo, int pageSize);
     PostDTO getPost(int id);
     PostDTO updatePost(int id, PostDTO post);
     void deletePost(int id);
