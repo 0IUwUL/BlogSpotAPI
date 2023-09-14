@@ -59,8 +59,8 @@ public class PostController {
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String> deletePost(@PathVariable("id") int id){
-        System.out.println(id);
-        return ResponseEntity.ok("Post "+id+" has deleted.");
+        postService.deletePost(id);
+        return new ResponseEntity<>("Post "+id+" has been deleted.", HttpStatus.OK);
     }
     
 }

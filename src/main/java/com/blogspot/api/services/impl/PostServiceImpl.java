@@ -59,5 +59,11 @@ public class PostServiceImpl implements PostService{
 
         return maptoPostDTO(updated_post);
     }
+
+    @Override
+    public void deletePost(int id) {
+        postRepo.findById(id).orElseThrow(()-> new PostException("Post does not exist."));
+        postRepo.deleteById(id);
+    }
     
 }
