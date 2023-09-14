@@ -9,5 +9,4 @@ import com.blogspot.api.models.Post;
 public interface PostRepository extends JpaRepository<Post, Integer>{
 
     Page<Post> findAllByOrderByUpdatedOnDesc(Pageable pagable);
-    
 }
