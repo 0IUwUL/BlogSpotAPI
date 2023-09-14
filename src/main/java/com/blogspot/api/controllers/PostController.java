@@ -1,5 +1,6 @@
 package com.blogspot.api.controllers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blogspot.api.dto.PostDTO;
 import com.blogspot.api.models.Post;
+import com.blogspot.api.services.PostService;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +25,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/post/")
 public class PostController {
+    private PostService postService;
+
+    
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     //get all post
     @GetMapping("posts")
     public ResponseEntity<List<Post>> getPosts(){
         List<Post> posts = new ArrayList<>();
-        posts.add(new Post(1, "Test", "test"));
+        posts.add(new Post(1, "Test", "test", LocalDateTime.now(), LocalDateTime.now()));
 
         return ResponseEntity.ok(posts);
     }
@@ -34,15 +44,14 @@ public class PostController {
     //get specific post
     @GetMapping("{id}")
     public Post getPost(@PathVariable int id){
-        return new Post(id, "This is a test", "Testing the test");
+        return new Post(id, "This is a test", "Testing the test", LocalDateTime.now(), LocalDateTime.now());
     }
 
     @PostMapping(value="create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        System.out.println(post.getTitle());
-        System.out.println(post.getContent());
-        return new ResponseEntity<>(post, HttpStatus.CREATED);
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
+
+        return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("update/{id}")

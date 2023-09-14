@@ -1,5 +1,10 @@
 package com.blogspot.api.models;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,4 +23,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String comment;
+    @CreationTimestamp
+    private LocalDateTime createdOn;
+    @UpdateTimestamp
+    private LocalDateTime updatedOn;
 }
