@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name="comment")
 
 public class Comment {
     @Id
@@ -34,6 +34,6 @@ public class Comment {
     private LocalDateTime updatedOn;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id")
+    @JoinColumn(name="post_id", nullable = false)
     private Post post;
 }

@@ -1,7 +1,6 @@
 package com.blogspot.api.mapper;
 
 import com.blogspot.api.dto.CommentDTO;
-import com.blogspot.api.dto.CommentMessageDTO;
 import com.blogspot.api.models.Comment;
 
 public class CommentMapper {
@@ -11,7 +10,6 @@ public class CommentMapper {
                     .comment(commentDTO.getComment())
                     .createdOn(commentDTO.getCreatedOn())
                     .updatedOn(commentDTO.getUpdatedOn())
-                    .post(commentDTO.getPost())
                     .build();
     }
 
@@ -21,15 +19,6 @@ public class CommentMapper {
                     .comment(comment.getComment())
                     .createdOn(comment.getCreatedOn())
                     .updatedOn(comment.getUpdatedOn())
-                    .post(comment.getPost())
-                    .build();
-    }
-
-    public static CommentMessageDTO maptoMessageCommentDTO (CommentDTO commentDTO){
-        return CommentMessageDTO.builder()
-                    .comment(commentDTO.getComment())
-                    .createdOn(commentDTO.getCreatedOn())
-                    .updatedOn(commentDTO.getUpdatedOn())
                     .build();
     }
 }

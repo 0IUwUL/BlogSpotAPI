@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostResponse getAllPost(int pageNo, int pageSize) {
         Pageable pagable = PageRequest.of(pageNo, pageSize);
-        Page<Post> posts = postRepo.findAllByOrderByUpdatedOnDesc(pagable);
+        Page<Post> posts = postRepo.findAllByOrderByCreatedOnDesc(pagable);
         List<Post> listofPosts = posts.getContent();
         List<PostDTO> content = listofPosts.stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList());
 

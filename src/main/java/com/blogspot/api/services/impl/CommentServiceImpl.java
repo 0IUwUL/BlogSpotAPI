@@ -3,7 +3,6 @@ package com.blogspot.api.services.impl;
 import org.springframework.stereotype.Service;
 
 import com.blogspot.api.dto.CommentDTO;
-import com.blogspot.api.dto.CommentMessageDTO;
 import com.blogspot.api.exceptions.PostException;
 import com.blogspot.api.models.Comment;
 import com.blogspot.api.models.Post;
@@ -12,8 +11,11 @@ import com.blogspot.api.repositories.PostRepository;
 import com.blogspot.api.services.CommentService;
 
 import static com.blogspot.api.mapper.CommentMapper.maptoCommentDTO;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.blogspot.api.mapper.CommentMapper.maptoComment;
-import static com.blogspot.api.mapper.CommentMapper.maptoMessageCommentDTO;;
 
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -27,14 +29,23 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentMessageDTO createComment(int id, CommentDTO commentDTO) {
+    public CommentDTO createComment(int id, CommentDTO commentDTO) {
         Comment comment = maptoComment(commentDTO);
         Post post = postRepo.findById(id).orElseThrow(()-> new PostException("Post does not exist."));
         comment.setPost(post);
         CommentDTO save = maptoCommentDTO(commentRepo.save(comment));
-        CommentMessageDTO result = maptoMessageCommentDTO(save);
-        result.setPost_id(save.getPost().getId());
-        return result;
+        return save;
+    }
+
+    @Override
+    public List<CommentDTO> getAllComments(int id) {
+        List<Comment> result = commentRepo.findAllByPostIdOrderByCreatedOnDesc(id);
+        return result.stream().map((comment) -> maptoCommentDTO(comment)).collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDTO getComment(int id) {
+        return maptoCommentDTO(commentRepo.findById(id).orElseThrow(() -> new PostException("Comment does not exist.")));
     }
     
 }

@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name="post")
 
 public class Post {
     @Id
@@ -39,5 +39,6 @@ public class Post {
     private LocalDateTime updatedOn;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<Comment>();
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 }
