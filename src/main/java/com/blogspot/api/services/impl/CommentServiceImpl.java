@@ -13,6 +13,7 @@ import com.blogspot.api.services.CommentService;
 
 import static com.blogspot.api.mapper.CommentMapper.maptoCommentDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,12 +47,30 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public CommentDTO getComment(int post_id, int id) {
+        if(compareId(post_id, id))
+            throw new CommentException("Incorrect assignment");
+
+        Comment comment = commentRepo.findById(id).orElseThrow(() -> new CommentException("Comment does not exist."));
+        return maptoCommentDTO(comment);
+    }
+
+    @Override
+    public CommentDTO updateComment(int post_id, int id, CommentDTO commentDTO) {
+        if(compareId(post_id, id))
+            throw new CommentException("Incorrect assignment");
+        Comment comment = commentRepo.findById(id).orElseThrow(() -> new CommentException("Comment does not exist."));
+        comment.setComment(commentDTO.getComment());
+        comment.setUpdatedOn(LocalDateTime.now());
+        CommentDTO result = maptoCommentDTO(commentRepo.save(comment));
+        return result;
+    }
+
+    private boolean compareId(int post_id, int id){
         Post post = postRepo.findById(post_id).orElseThrow(() -> new PostException("Post does not exist."));
         Comment comment = commentRepo.findById(id).orElseThrow(() -> new CommentException("Comment does not exist."));
         if(comment.getPost().getId() != post.getId())
-            throw new CommentException("Incorrect assignment");
-
-        return maptoCommentDTO(comment);
+            return true;
+        return false;
     }
     
 }
