@@ -35,8 +35,8 @@ public class CommentController {
         return new ResponseEntity<List<CommentDTO>>(commentService.getAllComments(id), HttpStatus.OK);
     }
 
-    @GetMapping("post/{id}")
-    public ResponseEntity<CommentDTO> findCommentofPost(@PathVariable("id") int id){
-        return new ResponseEntity<CommentDTO>(commentService.getComment(id), HttpStatus.OK);
+    @GetMapping("{postId}/{id}")
+    public ResponseEntity<CommentDTO> findCommentofPost(@PathVariable("postId") int post_id, @PathVariable("id") int id){
+        return new ResponseEntity<CommentDTO>(commentService.getComment(post_id, id), HttpStatus.OK);
     }
 }

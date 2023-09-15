@@ -3,6 +3,7 @@ package com.blogspot.api.services.impl;
 import org.springframework.stereotype.Service;
 
 import com.blogspot.api.dto.CommentDTO;
+import com.blogspot.api.exceptions.CommentException;
 import com.blogspot.api.exceptions.PostException;
 import com.blogspot.api.models.Comment;
 import com.blogspot.api.models.Post;
@@ -44,8 +45,13 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentDTO getComment(int id) {
-        return maptoCommentDTO(commentRepo.findById(id).orElseThrow(() -> new PostException("Comment does not exist.")));
+    public CommentDTO getComment(int post_id, int id) {
+        Post post = postRepo.findById(post_id).orElseThrow(() -> new PostException("Post does not exist."));
+        Comment comment = commentRepo.findById(id).orElseThrow(() -> new CommentException("Comment does not exist."));
+        if(comment.getPost().getId() != post.getId())
+            throw new CommentException("Incorrect assignment");
+
+        return maptoCommentDTO(comment);
     }
     
 }

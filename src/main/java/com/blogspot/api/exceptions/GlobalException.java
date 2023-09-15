@@ -20,4 +20,14 @@ public class GlobalException {
 
         return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(CommentException.class)
+    public ResponseEntity<ErrorObject> handleCommentNotFoundException(PostException ex, WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatus_code(HttpStatus.NOT_FOUND.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
+    }
 }
