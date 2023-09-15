@@ -65,6 +65,13 @@ public class CommentServiceImpl implements CommentService{
         return result;
     }
 
+     @Override
+    public void deleteComment(int post_id, int id) {
+        if(compareId(post_id, id))
+            throw new CommentException("Incorrect assignment");
+        commentRepo.deleteById(id);
+    }
+
     private boolean compareId(int post_id, int id){
         Post post = postRepo.findById(post_id).orElseThrow(() -> new PostException("Post does not exist."));
         Comment comment = commentRepo.findById(id).orElseThrow(() -> new CommentException("Comment does not exist."));
