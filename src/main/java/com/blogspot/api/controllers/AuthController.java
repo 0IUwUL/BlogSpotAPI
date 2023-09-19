@@ -2,10 +2,8 @@ package com.blogspot.api.controllers;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blogspot.api.dto.AuthResponseDTO;
 import com.blogspot.api.dto.LoginDTO;
 import com.blogspot.api.dto.RegisterDTO;
 import com.blogspot.api.models.Roles;
 import com.blogspot.api.models.Users;
 import com.blogspot.api.repositories.RoleRepository;
 import com.blogspot.api.repositories.UserRepository;
+import com.blogspot.api.security.TokenGenerator;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,13 +31,15 @@ public class AuthController {
     private UserRepository userRepo;
     private RoleRepository roleRepo;
     private PasswordEncoder passwordEncoder;
+    private TokenGenerator tokenGenerator;
 
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepo, RoleRepository roleRepo,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.passwordEncoder = passwordEncoder;
+        this.tokenGenerator = tokenGenerator;
     }
     
     @PostMapping("register")
@@ -60,14 +62,15 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO){
         Authentication authentication = authenticationManager.authenticate(
                                             new UsernamePasswordAuthenticationToken(
                                                 loginDTO.getUsername(), 
                                                 loginDTO.getPassword()
                                             ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<String>("User is logged in",HttpStatus.OK);
+        String token = tokenGenerator.generateToken(authentication);
+        return new ResponseEntity<>(new AuthResponseDTO(token),HttpStatus.OK);
     }
     
 }
