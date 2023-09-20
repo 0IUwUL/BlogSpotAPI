@@ -19,10 +19,6 @@ public class PostRepositoryTests {
     @Autowired
     private PostRepository postRepo;
 
-    // Constructor with no arguments
-    public PostRepositoryTests() {
-    }
-
     @Test
     public void PostRepository_SaveAll_ReturnsSavedPost(){
         //Arrange
