@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/post/")
+@RequestMapping("/api/post/")
 public class PostController {
     private PostService postService;
 
@@ -30,7 +30,7 @@ public class PostController {
     }
 
     //get all post
-    @GetMapping("posts")
+    @GetMapping("")
     public ResponseEntity<PostResponse> getPosts(
         @RequestParam (value = "pageNo", defaultValue = "0", required = false) int pageNo,
         @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize

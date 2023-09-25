@@ -18,7 +18,7 @@ import com.blogspot.api.dto.CommentDTO;
 import com.blogspot.api.services.CommentService;
 
 @RestController
-@RequestMapping("/comment/")
+@RequestMapping("/api/comment/")
 public class CommentController {
     private CommentService commentService;
 

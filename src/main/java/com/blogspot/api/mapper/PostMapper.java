@@ -17,6 +17,7 @@ public class PostMapper {
     public static PostDTO maptoPostDTO (Post post){
         return PostDTO.builder()
                     .id(post.getId())
+                    .author_id(post.getAuthor().getId())
                     .title(post.getTitle())
                     .content(post.getContent())
                     .createdOn(post.getCreatedOn())

@@ -12,6 +12,7 @@ import lombok.Data;
 
 public class PostDTO {
     private int id;
+    private int author_id;
     private String title;
     private String content;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

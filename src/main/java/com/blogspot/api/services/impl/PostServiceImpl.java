@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import com.blogspot.api.dto.PostDTO;
 import com.blogspot.api.dto.PostResponse;
 import com.blogspot.api.exceptions.PostException;
+import com.blogspot.api.exceptions.UserException;
 import com.blogspot.api.models.Post;
 import com.blogspot.api.repositories.PostRepository;
+import com.blogspot.api.repositories.UserRepository;
 import com.blogspot.api.services.PostService;
 
 import static com.blogspot.api.mapper.PostMapper.maptoPost;
@@ -22,15 +24,18 @@ import static com.blogspot.api.mapper.PostMapper.maptoPostDTO;
 @Service
 public class PostServiceImpl implements PostService{
     private PostRepository postRepo;
+    private UserRepository userRepo;
 
-    public PostServiceImpl(PostRepository postRepo) {
+    public PostServiceImpl(PostRepository postRepo, UserRepository userRepo) {
         this.postRepo = postRepo;
+        this.userRepo = userRepo;
     }
 
 
     @Override
     public PostDTO createPost(PostDTO postDTO) {
         Post post = maptoPost(postDTO);
+        post.setAuthor(userRepo.findById(postDTO.getAuthor_id()).orElseThrow(()-> new UserException("User does not exist.")));
         Post newPost = postRepo.save(post);
         PostDTO postResponse = maptoPostDTO(newPost);
         return postResponse;
