@@ -52,4 +52,13 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private Users author;
+
+    @Nullable
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "post_tags", 
+        joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName =  "id")
+    )
+    @Builder.Default
+    private List<Tags> tags = new ArrayList<>(); 
 }

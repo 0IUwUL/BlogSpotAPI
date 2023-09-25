@@ -1,5 +1,7 @@
 package com.blogspot.api.mapper;
 
+import java.util.stream.Collectors;
+
 import com.blogspot.api.dto.PostDTO;
 import com.blogspot.api.models.Post;
 
@@ -19,6 +21,7 @@ public class PostMapper {
                     .id(post.getId())
                     .author_id(post.getAuthor().getId())
                     .title(post.getTitle())
+                    .tags(post.getTags().stream().map((tag)->tag.getTag()).collect(Collectors.toList()))
                     .content(post.getContent())
                     .createdOn(post.getCreatedOn())
                     .updatedOn(post.getUpdatedOn())

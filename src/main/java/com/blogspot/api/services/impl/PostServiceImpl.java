@@ -14,9 +14,14 @@ import com.blogspot.api.dto.PostResponse;
 import com.blogspot.api.exceptions.PostException;
 import com.blogspot.api.exceptions.UserException;
 import com.blogspot.api.models.Post;
+import com.blogspot.api.models.Roles;
+import com.blogspot.api.models.Tags;
+import com.blogspot.api.models.Users;
 import com.blogspot.api.repositories.PostRepository;
+import com.blogspot.api.repositories.RoleRepository;
 import com.blogspot.api.repositories.UserRepository;
 import com.blogspot.api.services.PostService;
+import com.blogspot.api.services.TagService;
 
 import static com.blogspot.api.mapper.PostMapper.maptoPost;
 import static com.blogspot.api.mapper.PostMapper.maptoPostDTO;
@@ -25,22 +30,52 @@ import static com.blogspot.api.mapper.PostMapper.maptoPostDTO;
 public class PostServiceImpl implements PostService{
     private PostRepository postRepo;
     private UserRepository userRepo;
+    private RoleRepository roleRepo;
 
-    public PostServiceImpl(PostRepository postRepo, UserRepository userRepo) {
+    private TagService tagService;
+
+    public PostServiceImpl(PostRepository postRepo, UserRepository userRepo, TagService tagService,
+                            RoleRepository roleRepo) {
         this.postRepo = postRepo;
         this.userRepo = userRepo;
+        this.tagService = tagService;
+        this.roleRepo = roleRepo;
     }
 
 
     @Override
     public PostDTO createPost(PostDTO postDTO) {
         Post post = maptoPost(postDTO);
-        post.setAuthor(userRepo.findById(postDTO.getAuthor_id()).orElseThrow(()-> new UserException("User does not exist.")));
+
+        if(postDTO.getTags().size() > 0){
+            post.setTags(postDTO.getTags().stream().map((tag)-> searchTag(tag)).collect(Collectors.toList()));
+        }
+        Users user = userRepo.findById(postDTO.getAuthor_id()).orElseThrow(()-> new UserException("User does not exist."));
+
+        post.setAuthor(user);
         Post newPost = postRepo.save(post);
         PostDTO postResponse = maptoPostDTO(newPost);
+        
+        Roles role = roleRepo.findByTitle("AUTHOR").get();
+
+        //get pre existing role for user
+        List<Roles> userRoles = user.getRoles();
+        if(!userRoles.contains(role)){
+            userRoles.add(role);
+
+            // Update the roles for the user
+            user.setRoles(userRoles);
+            userRepo.save(user);
+        }
         return postResponse;
     }
 
+    private Tags searchTag(String searchTag) {
+        Tags tag = tagService.findTag(searchTag);
+        if(tag != null)
+            return tag;
+        return tagService.createTag(searchTag);
+    }
 
     @Override
     public PostResponse getAllPost(int pageNo, int pageSize) {
@@ -73,6 +108,11 @@ public class PostServiceImpl implements PostService{
         Post post = postRepo.findById(id).orElseThrow(()-> new PostException("Post could not be updated."));
         post.setTitle(data.getTitle());
         post.setContent(data.getContent());
+
+        if(data.getTags().size() > 0){
+            post.setTags(data.getTags().stream().map((tag)-> searchTag(tag)).collect(Collectors.toList()));
+        }
+
         post.setCreatedOn(post.getCreatedOn());
         post.setUpdatedOn(LocalDateTime.now());
 
@@ -83,7 +123,8 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public void deletePost(int id) {
-        postRepo.findById(id).orElseThrow(()-> new PostException("Post does not exist."));
+        Post post = postRepo.findById(id).orElseThrow(()-> new PostException("Post does not exist."));
+        post.getTags().clear();
         postRepo.deleteById(id);
     }
     

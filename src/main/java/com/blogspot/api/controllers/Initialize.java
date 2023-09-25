@@ -26,6 +26,10 @@ public class Initialize {
             Roles role2 = new Roles();
             role2.setTitle("USER");
             roleRepo.save(role2);
+
+            Roles role3 = new Roles();
+            role3.setTitle("AUTHOR");
+            roleRepo.save(role3);
         }
     }
 }
