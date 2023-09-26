@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -15,15 +16,29 @@ import com.blogspot.api.repositories.CommentRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class CommentRepositoryTests {
+public class CommentRepositoryTest {
     @Autowired
     private CommentRepository commentRepo;
 
+    private Comment comment;
+    private Comment comment1;
+    private Comment comment2;
+
+    @BeforeEach
+    public void init(){
+    comment = Comment.builder()
+                    .comment("This is a comment.")
+                    .build();
+    comment2 = Comment.builder()
+                    .comment("This is a comment 2.")
+                    .build();
+    comment1 = Comment.builder()
+                    .comment("This is a comment 1.")
+                    .build();
+    }
+
     @Test
     public void CommentRepository_SaveAll_ReturnSavedComment(){
-        Comment comment = Comment.builder()
-                                .comment("This is a comment.")
-                                .build();
 
         Comment savedCommment = commentRepo.save(comment);
 
@@ -34,12 +49,6 @@ public class CommentRepositoryTests {
 
     @Test
     public void CommentRepository_GetAll_ReturnAllComment(){
-        Comment comment1 = Comment.builder()
-                                .comment("This is a comment 1.")
-                                .build();
-        Comment comment2 = Comment.builder()
-                                .comment("This is a comment 2.")
-                                .build();
 
         commentRepo.save(comment1);
         commentRepo.save(comment2);
@@ -53,9 +62,6 @@ public class CommentRepositoryTests {
 
     @Test
     public void CommentRepository_GetSpecificComment_ReturnComment(){
-        Comment comment1 = Comment.builder()
-                                .comment("This is a comment 1.")
-                                .build();
 
         commentRepo.save(comment1);
 
@@ -68,9 +74,6 @@ public class CommentRepositoryTests {
 
     @Test
     public void CommentRepository_UpdateComment_ReturnUpdateComment(){
-        Comment comment1 = Comment.builder()
-                                .comment("This is a comment 1.")
-                                .build();
 
         commentRepo.save(comment1);
 
@@ -87,9 +90,6 @@ public class CommentRepositoryTests {
 
     @Test
     public void CommentRepository_DeleteComment_ReturnDeleteComment(){
-        Comment comment1 = Comment.builder()
-                                .comment("This is a comment 1.")
-                                .build();
 
         commentRepo.save(comment1);
         commentRepo.deleteById(comment1.getId());
