@@ -19,12 +19,14 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="users")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -42,6 +44,7 @@ public class Users {
     private LocalDateTime updatedOn;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -49,5 +52,6 @@ public class Users {
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName =  "id")
     )
+    @Builder.Default
     private List<Roles> roles = new ArrayList<>();
 }

@@ -1,6 +1,7 @@
 package com.blogspot.api.services.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,7 +125,16 @@ public class PostServiceImpl implements PostService{
     @Override
     public void deletePost(int id) {
         Post post = postRepo.findById(id).orElseThrow(()-> new PostException("Post does not exist."));
-        post.getTags().clear();
+        // Create a modifiable copy of the tags collection
+        List<Tags> tags = new ArrayList<>(post.getTags());
+        
+        // Clear the tags
+        tags.clear();
+        
+        // Set the modified tags back to the post
+        post.setTags(tags);
+        
+        // Now you can safely clear the tags in the post
         postRepo.deleteById(id);
     }
     
