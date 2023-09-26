@@ -48,7 +48,7 @@ public class CommentControllerTest {
         int postId = 1;
 
         when(commentService.createComment(postId, commentDTO)).thenReturn(commentDTO);
-        ResultActions response = mockMvc.perform(post("/comment/{id}/create", postId)
+        ResultActions response = mockMvc.perform(post("/api/comment/{id}/create", postId)
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(commentDTO)));
 
@@ -61,7 +61,7 @@ public class CommentControllerTest {
         int postId = 1;
 
         when(commentService.getAllComments(postId)).thenReturn(Arrays.asList(commentDTO));
-        ResultActions response = mockMvc.perform(get("/comment/{postId}", postId)
+        ResultActions response = mockMvc.perform(get("/api/comment/{postId}", postId)
                                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
@@ -74,7 +74,7 @@ public class CommentControllerTest {
         int commentId = 1;
 
         when(commentService.getComment(postId, commentId)).thenReturn(commentDTO);
-        ResultActions response = mockMvc.perform(get("/comment/{postId}/{commentId}", postId, commentId)
+        ResultActions response = mockMvc.perform(get("/api/comment/{postId}/{commentId}", postId, commentId)
                                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
@@ -87,7 +87,7 @@ public class CommentControllerTest {
         int commentId = 1;
 
         when(commentService.updateComment(postId, commentId, commentDTO)).thenReturn(commentDTO);
-        ResultActions response = mockMvc.perform(put("/comment/{postId}/{id}", postId, commentId)
+        ResultActions response = mockMvc.perform(put("/api/comment/{postId}/{id}", postId, commentId)
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(commentDTO)));
 
@@ -101,7 +101,7 @@ public class CommentControllerTest {
         int commentId = 1;
 
         doNothing().when(commentService).deleteComment(postId, commentId);
-        ResultActions response = mockMvc.perform(delete("/comment/{postId}/{commentId}", postId, commentId)
+        ResultActions response = mockMvc.perform(delete("/api/comment/{postId}/{commentId}", postId, commentId)
                                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());

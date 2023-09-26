@@ -53,7 +53,7 @@ public class PostControllerTest {
     @Test
     public void PostController_CreatePost_ReturnCreate() throws Exception{
         given(postService.createPost(ArgumentMatchers.any())).willAnswer((invocation -> invocation.getArgument(0)));
-        ResultActions response = mockMvc.perform(post("/post/create")
+        ResultActions response = mockMvc.perform(post("/api/post/create")
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -74,7 +74,7 @@ public class PostControllerTest {
                                                 .build();
                                                 
         when(postService.getAllPost(1, 2)).thenReturn(responseDTO);
-        ResultActions response = mockMvc.perform(get("/post/posts")
+        ResultActions response = mockMvc.perform(get("/api/post/")
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .param("pageNo", "1")
                                                 .param("pageSize", "2"));
@@ -88,7 +88,7 @@ public class PostControllerTest {
         int postId = 1;
         
         when(postService.getPost(postId)).thenReturn(postDTO);
-        ResultActions response = mockMvc.perform(get("/post/{id}", postId)
+        ResultActions response = mockMvc.perform(get("/api/post/{id}", postId)
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -102,7 +102,7 @@ public class PostControllerTest {
         int postId = 1;
 
         when(postService.updatePost(postId, postDTO)).thenReturn(postDTO);
-        ResultActions response = mockMvc.perform(put("/post/update/{id}", postId)
+        ResultActions response = mockMvc.perform(put("/api/post/update/{id}", postId)
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -116,7 +116,7 @@ public class PostControllerTest {
         int postId = 1;
 
         doNothing().when(postService).deletePost(postId);
-        ResultActions response = mockMvc.perform(delete("/post/delete/{id}", postId));
+        ResultActions response = mockMvc.perform(delete("/api/post/delete/{id}", postId));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }
