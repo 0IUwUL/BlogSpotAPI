@@ -24,7 +24,7 @@ import com.blogspot.api.repositories.PostRepository;
 import com.blogspot.api.services.impl.CommentServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class CommentService {
+public class CommentServiceTest {
     @Mock
     private CommentRepository commentRepo;
     @Mock
@@ -39,8 +39,8 @@ public class CommentService {
 
     @BeforeEach
     public void init(){
-        post = Post.builder().title("This is a test").content("Test content").build();
-        comment = Comment.builder().comment("This is a comment.").build();
+        post = Post.builder().id(1).title("This is a test").content("Test content").build();
+        comment = Comment.builder().id(1).comment("This is a comment.").post(post).build();
         commentDTO = CommentDTO.builder().comment("This is another comment.").build();
     }
 
