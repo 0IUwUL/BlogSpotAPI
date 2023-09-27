@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.blogspot.api.dto.PostDTO;
 import com.blogspot.api.dto.PostResponse;
+import com.blogspot.api.dto.SearchDTO;
 import com.blogspot.api.exceptions.PostException;
 import com.blogspot.api.exceptions.UserException;
 import com.blogspot.api.models.Post;
@@ -136,6 +137,38 @@ public class PostServiceImpl implements PostService{
         
         // Now you can safely clear the tags in the post
         postRepo.deleteById(id);
+    }
+
+
+    @Override
+    public PostResponse getSearchResult(int pageNo, int pageSize, SearchDTO params) {
+        // LocalDateTime startTime = null;
+        // LocalDateTime endTime = null;
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        //format: year-month-day
+        // if(!params.getStart_date().isEmpty()){
+        //     startTime = LocalDate.parse(params.getStart_date()).atStartOfDay();
+        // }
+        // System.out.println(startTime);
+        // if(!params.getStart_date().isEmpty()){
+        //     endTime = LocalDate.parse(params.getEnd_date()).atTime(23, 59, 59);
+        // }   
+
+        Page<Post> posts = postRepo.searchContext(pageable, params.getTitle(), params.getTags());
+        List<Post> listofPosts = posts.getContent();
+
+        List<PostDTO> content = listofPosts.stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList());
+
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(content);
+        postResponse.setPageNo(posts.getNumber());
+        postResponse.setPageSize(posts.getSize());
+        postResponse.setTotalElements(posts.getTotalElements());
+        postResponse.setTotalPages(posts.getTotalPages());
+        postResponse.setLast(posts.isLast());
+
+        return postResponse;
     }
     
 }

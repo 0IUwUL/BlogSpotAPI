@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blogspot.api.dto.PostDTO;
 import com.blogspot.api.dto.PostResponse;
+import com.blogspot.api.dto.SearchDTO;
 import com.blogspot.api.services.PostService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,11 @@ public class PostController {
     }
 
     //get all post
+    /**
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
     @GetMapping("")
     public ResponseEntity<PostResponse> getPosts(
         @RequestParam (value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -41,6 +47,21 @@ public class PostController {
         return new ResponseEntity<>(postService.getAllPost(pageNo, pageSize), HttpStatus.OK);
     }
 
+    /**
+     * @param pageNo
+     * @param pageSize
+     * @param params
+     * @return
+     */
+    @PostMapping("search")
+    public ResponseEntity<PostResponse> GetSearchResult(
+        @RequestParam (value = "pageNo", defaultValue = "0", required = false) int pageNo,
+        @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+        @RequestBody SearchDTO params
+    ){
+        return new ResponseEntity<>(postService.getSearchResult(pageNo, pageSize, params), HttpStatus.OK);
+    }
+
     //get specific post
     @GetMapping("{id}")
     public ResponseEntity<PostDTO> getPost(@PathVariable int id){
@@ -48,22 +69,36 @@ public class PostController {
         return ResponseEntity.ok(postService.getPost(id));
     }
 
+    /**
+     * @param postDTO
+     * @return
+     */
     @PostMapping(value="create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
         return new ResponseEntity<>(postService.createPost(postDTO), HttpStatus.CREATED);
     }
 
+    /**
+     * @param postDTO
+     * @param id
+     * @return
+     */
     @PutMapping("update/{id}")
     public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, @PathVariable("id") int id){
         PostDTO response = postService.updatePost(id, postDTO);
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * @param id
+     * @param responseEntity TODO
+     * @return
+     */
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable("id") int id){
+    public ResponseEntity<String> deletePost(@PathVariable("id") int id, ResponseEntity<String> responseEntity){
         postService.deletePost(id);
-        return new ResponseEntity<>("Post "+id+" has been deleted.", HttpStatus.OK);
+        return responseEntity;
     }
     
 }
