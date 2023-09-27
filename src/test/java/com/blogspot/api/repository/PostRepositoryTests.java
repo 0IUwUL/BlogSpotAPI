@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.blogspot.api.models.Post;
 import com.blogspot.api.models.Tags;
@@ -82,13 +86,14 @@ public class PostRepositoryTests {
         //Act
         postRepo.save(post);
         postRepo.save(post1);
+        Pageable pageable = PageRequest.of(0, 5);
 
-        List<Post> savedPost = postRepo.searchPost("test");
-
+        Page<Post> pagePost = postRepo.searchContext(pageable, "test", Arrays.asList("Test2"));
+        List<Post> savedPosts = pagePost.getContent();
         //Assert
-        Assertions.assertNotNull(savedPost);
-        Assertions.assertTrue(savedPost.size()>0);
-        Assertions.assertEquals(savedPost.size(), 2);
+        Assertions.assertNotNull(savedPosts);
+        Assertions.assertTrue(savedPosts.size()>0);
+        Assertions.assertEquals(savedPosts.size(), 1);
     }
 
     @Test
