@@ -92,13 +92,12 @@ public class PostController {
 
     /**
      * @param id
-     * @param responseEntity TODO
      * @return
      */
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable("id") int id, ResponseEntity<String> responseEntity){
+    public ResponseEntity<String> deletePost(@PathVariable("id") int id){
         postService.deletePost(id);
-        return responseEntity;
+        return new ResponseEntity<>("Post "+id+" has been deleted.", HttpStatus.OK);
     }
     
 }
