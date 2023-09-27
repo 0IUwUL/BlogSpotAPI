@@ -47,8 +47,12 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="author_id")
     private Users author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private Users favorite;
 
     @Nullable
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

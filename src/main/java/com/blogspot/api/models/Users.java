@@ -47,6 +47,10 @@ public class Users {
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Post> favorites = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", 
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -54,4 +58,17 @@ public class Users {
     )
     @Builder.Default
     private List<Roles> roles = new ArrayList<>();
+    
+    //For followers
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_followers", 
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName =  "id")
+    )
+    @Builder.Default
+    private List<Users> followers = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "followers")
+    @Builder.Default
+    private List<Users> following = new ArrayList<>();
 }
