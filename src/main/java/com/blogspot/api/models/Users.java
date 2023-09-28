@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,9 +48,14 @@ public class Users {
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "favorite", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Nullable
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "favorite_posts", 
+        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "post_id", referencedColumnName =  "id")
+    )
     @Builder.Default
-    private List<Post> favorites = new ArrayList<>();
+    private List<Post> favorites = new ArrayList<>(); 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles", 
@@ -66,9 +72,9 @@ public class Users {
         inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName =  "id")
     )
     @Builder.Default
-    private List<Users> followers = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "followers")
-    @Builder.Default
     private List<Users> following = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "following")
+    @Builder.Default
+    private List<Users> followers = new ArrayList<>();
 }

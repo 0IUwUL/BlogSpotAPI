@@ -50,9 +50,9 @@ public class Post {
     @JoinColumn(name="author_id")
     private Users author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private Users favorite;
+    @ManyToMany(mappedBy = "favorites")
+    @Builder.Default
+    private List<Users> users = new ArrayList<>();
 
     @Nullable
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

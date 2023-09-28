@@ -13,10 +13,11 @@ import com.blogspot.api.models.Post;
 public interface PostRepository extends JpaRepository<Post, Integer>{
 
     Page<Post> findAllByOrderByCreatedOnDesc(Pageable pagable);
+    List<Post> findByUsersIdOrderByCreatedOnDesc(int id);
     @Query("SELECT p FROM post p " +
             "LEFT JOIN p.tags t "+
             "WHERE (:title is NULL OR LOWER(p.title) LIKE CONCAT('%', LOWER(:title), '%')) " +
-            "AND (:tags IS NULL OR t.tag IN :tags) ")
+            "OR (:tags IS NULL OR t.tag IN :tags)")
     Page<Post> searchContext(Pageable pagable, 
                             @Param("title") String title,
                             @Param("tags") List<String> tags);

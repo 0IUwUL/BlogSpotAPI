@@ -83,18 +83,7 @@ public class PostServiceImpl implements PostService{
     public PostResponse getAllPost(int pageNo, int pageSize) {
         Pageable pagable = PageRequest.of(pageNo, pageSize);
         Page<Post> posts = postRepo.findAllByOrderByCreatedOnDesc(pagable);
-        List<Post> listofPosts = posts.getContent();
-        List<PostDTO> content = listofPosts.stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList());
-
-        PostResponse postResponse = new PostResponse();
-        postResponse.setContent(content);
-        postResponse.setPageNo(posts.getNumber());
-        postResponse.setPageSize(posts.getSize());
-        postResponse.setTotalElements(posts.getTotalElements());
-        postResponse.setTotalPages(posts.getTotalPages());
-        postResponse.setLast(posts.isLast());
-        
-        return postResponse;
+        return response(posts);
     }
 
 
@@ -156,6 +145,10 @@ public class PostServiceImpl implements PostService{
         // }   
 
         Page<Post> posts = postRepo.searchContext(pageable, params.getTitle(), params.getTags());
+        return response(posts);
+    }
+
+    private PostResponse response(Page<Post> posts){
         List<Post> listofPosts = posts.getContent();
 
         List<PostDTO> content = listofPosts.stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList());
