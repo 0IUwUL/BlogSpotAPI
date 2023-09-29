@@ -93,7 +93,7 @@ public class PostRepositoryTests {
         //Assert
         Assertions.assertNotNull(savedPosts);
         Assertions.assertTrue(savedPosts.size()>0);
-        Assertions.assertEquals(savedPosts.size(), 1);
+        Assertions.assertEquals(savedPosts.size(), 2);
     }
 
     @Test

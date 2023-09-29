@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.blogspot.api.dto.PostDTO;
+import com.blogspot.api.dto.ProfileDTO;
 import com.blogspot.api.exceptions.PostException;
 import com.blogspot.api.exceptions.UserException;
 import com.blogspot.api.models.Post;
@@ -76,5 +77,15 @@ public class ProfileServiceImpl implements ProfileService{
         List<PostDTO> favorites = posts.stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList());
         
         return favorites;
+    }
+
+    @Override
+    public ProfileDTO getProfile(int id) {
+        ProfileDTO user = new ProfileDTO();
+        user.setUsername(userRepo.findById(id).get().getUsername());
+        user.setFavorites(postRepo.findByUsersIdOrderByCreatedOnDesc(id).stream().map((post)-> maptoPostDTO(post)).collect(Collectors.toList()));
+        user.setFollower_count(userRepo.countByFollowersId(id));
+        user.setPosts(postRepo.findAllByAuthorId(id).stream().map((post)->maptoPostDTO(post)).collect(Collectors.toList()));
+        return user;
     }
 }

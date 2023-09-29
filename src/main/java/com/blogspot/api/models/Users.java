@@ -69,7 +69,7 @@ public class Users {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_followers", 
         joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName =  "id")
+        inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName =  "id")
     )
     @Builder.Default
     private List<Users> following = new ArrayList<>();

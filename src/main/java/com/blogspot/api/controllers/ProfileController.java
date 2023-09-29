@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.blogspot.api.dto.PostDTO;
+import com.blogspot.api.dto.ProfileDTO;
 import com.blogspot.api.services.ProfileService;
 
 @Controller
@@ -32,5 +33,10 @@ public class ProfileController {
     @GetMapping("/favorites/{user_id}")
     public ResponseEntity<List<PostDTO>> getAllFavoritePosts(@PathVariable("user_id") int id){
         return new ResponseEntity<>(profileService.getFavorites(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<ProfileDTO> getProfile(@PathVariable("id") int id){
+        return new ResponseEntity<>(profileService.getProfile(id), HttpStatus.OK);
     }
 }
