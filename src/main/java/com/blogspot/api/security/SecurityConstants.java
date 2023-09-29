@@ -6,7 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 public class SecurityConstants {
-    public static final long JWT_Expiration = ;
-    public static final Key JWT_Secret = ;
+    public static final long JWT_Expiration = 7000;
+    public static final Key JWT_Secret = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     
 }

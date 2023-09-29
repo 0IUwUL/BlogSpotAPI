@@ -38,6 +38,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET).permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/post/update/**").hasRole("AUTHOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/post/delete/**").hasRole("AUTHOR")
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
