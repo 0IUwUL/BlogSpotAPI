@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.blogspot.api.dto.PostDTO;
 import com.blogspot.api.dto.PostResponse;
+import com.blogspot.api.dto.SearchDTO;
 import com.blogspot.api.models.Post;
 import com.blogspot.api.models.Roles;
 import com.blogspot.api.models.Tags;
@@ -143,6 +144,22 @@ public class PostServiceTest {
         assertAll(() -> {
             assertDoesNotThrow(() -> postService.deletePost(1, 1));
         });
+    }
+
+    @Test
+    public void PostService_GetPostBySearch_ReturnPageofPost(){
+        int pageNo = 0;
+        int pageSize = 10;
+
+        SearchDTO search = SearchDTO.builder()
+                                    .title("Test")
+                                    .tags(Arrays.asList("Test"))
+                                    .build();
+        Page<Post> posts = Mockito.mock(Page.class);
+        when(postRepo.searchContext(Mockito.any(Pageable.class), Mockito.eq(search.getTitle()), Mockito.eq(search.getTags()))).thenReturn(posts);
+
+        PostResponse searchResult = postService.getSearchResult(pageNo, pageSize, search);
+        Assertions.assertNotNull(searchResult);
     }
      
 }

@@ -18,16 +18,21 @@ import org.springframework.data.domain.Pageable;
 
 import com.blogspot.api.models.Post;
 import com.blogspot.api.models.Tags;
+import com.blogspot.api.models.Users;
 import com.blogspot.api.repositories.PostRepository;
+import com.blogspot.api.repositories.UserRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class PostRepositoryTests {
     @Autowired
     private PostRepository postRepo;
+    @Autowired
+    private UserRepository userRepo;
 
     private Post post;
     private Post post1;
+    private Users user;
 
     @BeforeEach
     public void init(){
@@ -126,5 +131,19 @@ public class PostRepositoryTests {
 
         //Assert
         Assertions.assertTrue(deletedPost.isEmpty());
+    }
+
+    @Test
+    public void PostRepository_FindPostByAuthor_ReturnListofPost(){
+        user = Users.builder().id(1).username("Test User").build();
+        userRepo.save(user);
+
+        post.setAuthor(user);
+        post1.setAuthor(user);
+        postRepo.save(post);
+        postRepo.save(post1);
+        List<Post> posts = postRepo.findAllByAuthorId(user.getId());
+        //Assert
+        Assertions.assertTrue(posts.size()==2);
     }
 }
