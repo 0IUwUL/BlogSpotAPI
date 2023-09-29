@@ -131,7 +131,7 @@ public class PostServiceTest {
         when(tagService.findTag(tag1.getTag())).thenReturn(tag1);
         when(tagService.createTag(tag2.getTag())).thenReturn(tag2);
 
-        PostDTO savedPost = postService.updatePost(1, postDTO);
+        PostDTO savedPost = postService.updatePost(1, postDTO, 1);
 
         Assertions.assertNotNull(savedPost);
     }
@@ -141,7 +141,7 @@ public class PostServiceTest {
         when(postRepo.findById(1)).thenReturn(Optional.ofNullable(post));
 
         assertAll(() -> {
-            assertDoesNotThrow(() -> postService.deletePost(1));
+            assertDoesNotThrow(() -> postService.deletePost(1, 1));
         });
     }
      

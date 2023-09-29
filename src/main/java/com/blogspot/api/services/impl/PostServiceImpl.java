@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.blogspot.api.dto.PostDTO;
 import com.blogspot.api.dto.PostResponse;
 import com.blogspot.api.dto.SearchDTO;
+import com.blogspot.api.exceptions.PostBadRequest;
 import com.blogspot.api.exceptions.PostException;
 import com.blogspot.api.exceptions.UserException;
 import com.blogspot.api.models.Post;
@@ -95,8 +96,11 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public PostDTO updatePost(int id, PostDTO data) {
-        Post post = postRepo.findById(id).orElseThrow(()-> new PostException("Post could not be updated."));
+    public PostDTO updatePost(int id, PostDTO data, int author_id) {
+        Post post = postRepo.findById(id).orElseThrow(()-> new PostException("Post does not exist."));
+
+        if(post.getAuthor().getId() != author_id)
+            throw new PostBadRequest("Not the author of the post.");
         post.setTitle(data.getTitle());
         post.setContent(data.getContent());
 
@@ -113,19 +117,21 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void deletePost(int id) {
+    public void deletePost(int id, int author_id) {
         Post post = postRepo.findById(id).orElseThrow(()-> new PostException("Post does not exist."));
+        if(post.getAuthor().getId() != author_id)
+            throw new PostBadRequest("Not author of this post.");
+        
         // Create a modifiable copy of the tags collection
         List<Tags> tags = new ArrayList<>(post.getTags());
-        
+
         // Clear the tags
         tags.clear();
-        
         // Set the modified tags back to the post
         post.setTags(tags);
-        
+        post.getUsers().clear();
         // Now you can safely clear the tags in the post
-        postRepo.deleteById(id);
+        postRepo.delete(post);
     }
 
 

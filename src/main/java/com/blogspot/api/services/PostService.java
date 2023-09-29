@@ -8,7 +8,7 @@ public interface PostService {
     PostDTO createPost(PostDTO postDTO);
     PostResponse getAllPost(int pageNo, int pageSize);
     PostDTO getPost(int id);
-    PostDTO updatePost(int id, PostDTO post);
-    void deletePost(int id);
+    PostDTO updatePost(int id, PostDTO post, int author_id);
+    void deletePost(int id, int author_id);
     PostResponse getSearchResult(int pageNo, int pageSize, SearchDTO params);
 }

@@ -100,9 +100,9 @@ public class PostControllerTest {
     @Test
     public void PostController_UpdatePost_ReturnPostDTO() throws Exception{
         int postId = 1;
-
-        when(postService.updatePost(postId, postDTO)).thenReturn(postDTO);
-        ResultActions response = mockMvc.perform(put("/api/post/update/{id}", postId)
+        int authorId = 1;
+        when(postService.updatePost(postId, postDTO, 1)).thenReturn(postDTO);
+        ResultActions response = mockMvc.perform(put("/api/post/update/{id}/{authorId}", postId, authorId)
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(objectMapper.writeValueAsString(postDTO)));
 
@@ -114,9 +114,9 @@ public class PostControllerTest {
     @Test
     public void PostController_DeletePost_ReturnString() throws Exception{
         int postId = 1;
-
-        doNothing().when(postService).deletePost(postId);
-        ResultActions response = mockMvc.perform(delete("/api/post/delete/{id}", postId));
+        int authorId = 1;
+        doNothing().when(postService).deletePost(postId, authorId);
+        ResultActions response = mockMvc.perform(delete("/api/post/delete/{id}/{authorId}", postId, authorId));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
     }

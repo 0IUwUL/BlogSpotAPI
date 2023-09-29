@@ -84,19 +84,20 @@ public class PostController {
      * @param id
      * @return
      */
-    @PutMapping("update/{id}")
-    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, @PathVariable("id") int id){
-        PostDTO response = postService.updatePost(id, postDTO);
-        return ResponseEntity.ok(response);
+    @PutMapping("update/{id}/{author_id}")
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO postDTO, 
+                                                @PathVariable("id") int id, 
+                                                @PathVariable("author_id") int author_id){
+        return ResponseEntity.ok(postService.updatePost(id, postDTO, author_id));
     }
 
     /**
      * @param id
      * @return
      */
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable("id") int id){
-        postService.deletePost(id);
+    @DeleteMapping("delete/{id}/{author_id}")
+    public ResponseEntity<String> deletePost(@PathVariable("id") int id, @PathVariable("author_id") int author_id){
+        postService.deletePost(id, author_id);
         return new ResponseEntity<>("Post "+id+" has been deleted.", HttpStatus.OK);
     }
     

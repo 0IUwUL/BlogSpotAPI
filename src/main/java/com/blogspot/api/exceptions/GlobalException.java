@@ -22,7 +22,7 @@ public class GlobalException {
     }
 
     @ExceptionHandler(CommentException.class)
-    public ResponseEntity<ErrorObject> handleCommentNotFoundException(PostException ex, WebRequest request){
+    public ResponseEntity<ErrorObject> handleCommentNotFoundException(CommentException ex, WebRequest request){
         ErrorObject errorObject = new ErrorObject();
         errorObject.setStatus_code(HttpStatus.NOT_FOUND.value());
         errorObject.setMessage(ex.getMessage());
@@ -32,12 +32,42 @@ public class GlobalException {
     }
 
     @ExceptionHandler(UserException.class)
-    public ResponseEntity<ErrorObject> handleUserNotFoundException(PostException ex, WebRequest request){
+    public ResponseEntity<ErrorObject> handleUserNotFoundException(UserException ex, WebRequest request){
         ErrorObject errorObject = new ErrorObject();
         errorObject.setStatus_code(HttpStatus.NOT_FOUND.value());
         errorObject.setMessage(ex.getMessage());
         errorObject.setTimestamp(new Date());
 
         return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CommentBadRequest.class)
+    public ResponseEntity<ErrorObject> handleCommentBadRequestException(CommentBadRequest ex, WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatus_code(HttpStatus.BAD_REQUEST.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PostBadRequest.class)
+    public ResponseEntity<ErrorObject> handlePostBadRequestException(PostBadRequest ex, WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatus_code(HttpStatus.BAD_REQUEST.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserBadRequest.class)
+    public ResponseEntity<ErrorObject> handleUserBadRequestException(UserBadRequest ex, WebRequest request){
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setStatus_code(HttpStatus.BAD_REQUEST.value());
+        errorObject.setMessage(ex.getMessage());
+        errorObject.setTimestamp(new Date());
+
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.BAD_REQUEST);
     }
 }
